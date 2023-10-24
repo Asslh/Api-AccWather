@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pronóstico de 5 días</title>
+</head>
+<body>
+    <h1>Pronóstico de 5 días</h1>
+    <div id="weather-forecast">
+    </div>
+
+    <script>
+        const apiKey = 'WnFNT1LtErxbrlv4RKewmQlNJDqDQjKk';
+        const locationKey = '231866';
+
+        const apiUrl = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=es-ES&metric=true`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const forecast = data.DailyForecasts;
+
+                const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+                const forecastContainer = document.getElementById('weather-forecast');
+                forecast.forEach((day, index) => {
+                    const date = new Date(day.Date);
+                    const dayOfWeek = daysOfWeek[date.getDay()];
+                    const formattedDate = `${dayOfWeek}, ${date.getDate()} de ${getMonthName(date.getMonth())} de ${date.getFullYear()}`;
+
+                    forecastContainer.innerHTML += `<div>
+                        <h2>${formattedDate}</h2>
+                        <p>Máxima: ${day.Temperature.Maximum.Value}°C</p>
+                        <p>Mínima: ${day.Temperature.Minimum.Value}°C</p>
+                        <p>${day.Day.IconPhrase}</p>
+                    </div>`;
+                });
+            })
+            .catch(error => console.error('Error al obtener el pronóstico:', error));
+
+        function getMonthName(month) {
+            const monthNames = [
+                'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            ];
+            return monthNames[month];
+        }
+    </script>
+</body>
+</html>
