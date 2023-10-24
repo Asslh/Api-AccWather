@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #555;
+}
+
+#weather-forecast {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#weather-forecast div {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#weather-forecast p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+#weather-forecast img {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto;
+}
