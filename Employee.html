@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Search</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 60%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #employeeTable {
+      display: none;
+      margin-top: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #e9ecef;
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Search for Collaborators</h1>
+    <label for="employeeName">Employee: </label>
+    <input type="text" id="employeeName" placeholder="Enter Employee Name" />
+    <button id="fetchDataButton">Search</button>
+
+    <div id="employeeTable">
+      <table>
+        <tr>
+          <th>Employee</th>
+          <td id="name"></td>
+        </tr>
+        <tr>
+          <th>Ext</th>
+          <td id="cellNumber"></td>
+        </tr>
+        <tr>
+          <th>Phone</th>
+          <td id="personalemail"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const fetchDataButton = document.getElementById("fetchDataButton");
+    fetchDataButton.addEventListener("click", fetchEmployeeData);
+
+    function fetchEmployeeData() {
+        const employeeName = document.getElementById("employeeName").value;
+        const apiURL = `http://192.168.56.106/api/resource/Employee?fields=["employee_name","cell_number","personal_email"]`;
+
+        fetch(apiURL, {
+          headers: {
+            Authorization: "token e85055ee1023461:dbb474ce26cca9d",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const employee = data.data.find(
+              (emp) => emp.employee_name === employeeName
+            );
+            if (employee) {
+              document.getElementById("name").textContent =
+                employee.employee_name;
+              document.getElementById("cellNumber").textContent =
+                employee.cell_number;
+              document.getElementById("personalemail").textContent =
+                employee.personal_email;
+              document.getElementById("employeeTable").style.display = "block";
+            } else {
+              alert("Employee not found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
