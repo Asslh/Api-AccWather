@@ -1,141 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birthday Celebration</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumpleaños</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
 
-    .container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 60%;
-      max-width: 400px;
-      text-align: center;
-    }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
 
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-    }
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-    }
+        th, td {
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            text-align: left;
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-    button {
-      background-color: #4caf50;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
 
-    button:hover {
-      background-color: #45a049;
-    }
+        #ProximoCumpleaños, #CumpleañosEmpleados {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    #employeeTable {
-      display: none;
-      margin-top: 20px;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    th,
-    td {
-      border: 1px solid #e9ecef;
-      text-align: center;
-      padding: 10px;
-    }
-
-    #birthdayImage {
-      display: none;
-      max-width: 100%;
-      height: auto;
-      margin-top: 20px;
-    }
-  </style>
+        #ImagenFelizCumple {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Celebrate the Birthday!</h1>
-    <label for="employeeName">Person: </label>
-    <input type="text" id="employeeName" placeholder="Enter Person's Name" />
-    <button id="fetchDataButton">Search</button>
 
-    <div id="employeeTable">
-      <table>
-        <tr>
-          <th>Name</th>
-          <td id="name"></td>
-        </tr>
-        <tr>
-          <th>Birthdate</th>
-          <td id="birthdate"></td>
-        </tr>
-        <tr>
-          <th>Age</th>
-          <td id="age"></td>
-        </tr>
-      </table>
+    <h1>Cumpleaños</h1>
+
+    <div id="ProximoCumpleaños">
+        <h2>Próximo Cumpleaños</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Fecha de nacimiento</th>
+                    <th>Tiempo restante</th>
+                </tr>
+            </thead>
+            <tbody id="cumpleanosCercanoTabla"></tbody>
+        </table>
     </div>
 
-    <img id="birthdayImage" src="birthday_image.jpg" alt="Birthday Celebration" />
+    <div id="CumpleañosEmpleados">
+        <h2>Cumpleaños de Empleados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Fecha de nacimiento</th>
+                </tr>
+            </thead>
+            <tbody id="cumpleañosEmpleadosTabla"></tbody>
+        </table>
+    </div>
 
-  </div>
+    <div id="ImagenFelizCumple">
+        <img src="feliz_cumpleanos.jpg" alt="Feliz Cumpleaños">
+    </div>
 
-  <script>
-    const fetchDataButton = document.getElementById("fetchDataButton");
-    fetchDataButton.addEventListener("click", fetchEmployeeData);
-    function fetchEmployeeData() {
-      const employeeName = document.getElementById("employeeName").value;
-      const apiURL = `http://192.168.56.106/api/resource/Employee?fields=["employee_name","date_of_birth"]&filters=[["Employee","date_of_birth","between",["1000-01-01","9999-01-31"]]]`;
+    <script>
+        const apiUrl = 'http://192.168.56.106/api/resource/Employee?fields=["employee_name","date_of_birth"]&filters=[["Employee","date_of_birth","between",["1000-01-01","9999-01-31"]]]';
+        const token = 'e85055ee1023461';
+        const tokenSecreto = 'dbb474ce26cca9d';
 
-        fetch(apiURL, {
-          headers: {
-            Authorization: "token e85055ee1023461:dbb474ce26cca9d",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const employee = data.data.find(
-              (emp) => emp.employee_name === employeeName
-            );
-            if (employee) {
-              document.getElementById("name").textContent =
-                employee.employee;
-              document.getElementById("dateofbirth").textContent =
-                employee.date_of_birth;
-              document.getElementById("between").textContent =
-                employee.between;
-      document.getElementById("birthdayImage").style.display = "block";
-    }})
-    }
-  </script>
+        async function fetchEmployeeData() {
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `token ${token}:${tokenSecreto}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const sortedData = data.data.sort((a, b) => new Date(a.date_of_birth) - new Date(b.date_of_birth));
+                const today = new Date();
+                const proximoCumpleanos = sortedData.find(empleado => new Date(empleado.date_of_birth).setFullYear(today.getFullYear()) >= today);
+
+                if (proximoCumpleanos) {
+                    const tiempoRestante = Math.ceil((new Date(proximoCumpleanos.date_of_birth).setFullYear(today.getFullYear()) - today) / (1000 * 60 * 60 * 24));
+                    document.getElementById('cumpleanosCercanoTabla').innerHTML = `
+                        <tr>
+                            <td>${proximoCumpleanos.employee_name}</td>
+                            <td>${proximoCumpleanos.date_of_birth}</td>
+                            <td>${tiempoRestante} días</td>
+                        </tr>
+                    `;
+                }
+                const cumpleañosEmpleadosTabla = document.getElementById('cumpleañosEmpleadosTabla');
+                cumpleañosEmpleadosTabla.innerHTML = sortedData.map(empleado => `
+                    <tr>
+                        <td>${empleado.employee_name}</td>
+                        <td>${empleado.date_of_birth}</td>
+                    </tr>
+                `).join('');
+                const esCumpleañosHoy = proximoCumpleanos && new Date(proximoCumpleanos.date_of_birth).getMonth() === today.getMonth() && new Date(proximoCumpleanos.date_of_birth).getDate() === today.getDate();
+                const imagenFelizCumple = document.getElementById('ImagenFelizCumple');
+                imagenFelizCumple.style.display = esCumpleañosHoy ? 'block' : 'none';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        fetchEmployeeData();
+    </script>
+
 </body>
 </html>
